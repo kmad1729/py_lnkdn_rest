@@ -1,0 +1,13 @@
+Metadata-Version: 1.0
+Name: py-lnkdn-rest
+Version: 0.1
+Summary: A utility API to connect and extract data to linkedin REST API
+Home-page: UNKNOWN
+Author: Kashyap Maduri
+Author-email: kashyap.mad@gmail.com
+License: UNKNOWN
+Description: This is a python utility to connect to linkedin rest api and get linkedin profile data.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 2 - Pre-Alpha
+Classifier: Topic :: Utilities
