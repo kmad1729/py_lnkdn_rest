@@ -1,5 +1,6 @@
 from rauth import OAuth2Service, OAuth2Session
 from hashlib import sha1
+import requests
 try:
     from urlparse import parse_qsl
 except ImportError:
@@ -8,12 +9,19 @@ from random import random
 
 import re
 import json
+import os, ConfigParser
 
-api_key = '16k7wi51gfrm'
-#16k7wi$1g
 
-#f
-sec_key = 'rvGAHWyoOq3hbqi9'
+### READING the website details
+config = ConfigParser.RawConfigParser()
+config.read(os.path.join(os.path.abspath('..'),'my_site_key_details.ini'))
+
+
+api_key = config.get('my_website_details','api_key')
+sec_key = config.get('my_website_details','sec_key')
+redirect_uri = config.get('my_website_details','redirect_uri')
+
+######
 
 site = r'https://www.linkedin.com'
 auth_url = r'/uas/oauth2/authorization'
@@ -28,7 +36,7 @@ lnkdn = OAuth2Service(name = 'example',
                       base_url = bs)
 
 
-redirect_uri = r'http://www.kashyapmaduri.com'
+
 state = sha1(str(random())).hexdigest()
 
 params = { 'response_type': 'code',
@@ -79,7 +87,10 @@ s = lnkdn.get_auth_session(data=data, decoder=json.loads,auth = creds)
 
 
 
-r = s.get(r'v1/people/~/connections?format=json&oauth2_access_token=' +str(s.access_token) , data={'x-li-format': 'json'}, bearer_auth=False)
+pref = 'https://api.linkedin.com/'
+#r = s.get(pref + r'v1/people/~/connections?format=json&oauth2_access_token=' +str(s.access_token) , data={'x-li-format': 'json'}, bearer_auth=False)
+
+r = requests.get(pref + r'v1/people/~/connections?format=json&oauth2_access_token=' +str(s.access_token) )
 
 
 def get_dict_from_json(raw_string):
