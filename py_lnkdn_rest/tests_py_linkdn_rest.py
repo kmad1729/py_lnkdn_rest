@@ -7,6 +7,8 @@ class Authentication_Tests(unittest.TestCase):
                                 redirect_url = 'www.foo.com')
     path_to_write = os.path.join(os.path.expanduser('~'),
                                  'py_lnkdn_auth_test_file.ini')
+    path_to_write1 = os.path.join('/Users/kashyap/Documents/programming/git_repos/'
+                                 'py_lnkdn_rest/my_site_key_details.ini')
 
 
     def setUp(self):
@@ -14,12 +16,12 @@ class Authentication_Tests(unittest.TestCase):
         dev_credentials = '''[website1_details]
 client_id = api_key1
 client_secret = api_secret1
-redirect_url = http://www.website1.com
+redirect_uri = http://www.website1.com
 
 [website2_details]
 client_id = api_key2
 client_secret = api_secret2
-redirect_url = http://www.website2.com
+redirect_uri = http://www.website2.com
         '''
         with open(self.path_to_write, 'w') as f:
             f.write(dev_credentials)
@@ -46,10 +48,46 @@ redirect_url = http://www.website2.com
                            'http://www.website1.com')
         assert(test_auth_object2.redirect_url ==
                            'http://www.website2.com')
+
+    def test_stateGeneration(self):
+        test_auth_object = Oauth2_Py_Linkedin(**self.auth_credential_dict)
+        assert(len(test_auth_object.state) == 40)
+        import string
+        assert(all(c in string.hexdigits for c in test_auth_object.state))
+
+    def test_authorize_url(self):
+        test_auth_object = Oauth2_Py_Linkedin(**self.auth_credential_dict)
+        test_url = test_auth_object.get_authorize_url()
+        assert(test_auth_object.authorize_url in test_url)
+        assert(r'state=' + test_auth_object.state in test_url)
+        assert(r'redirect_uri=' + test_auth_object.redirect_url in test_url)
+        assert(r'client_id=' + test_auth_object.client_id in test_url)
+
+    def test_getAccessToken(self):
+        test_auth_object = Oauth2_Py_Linkedin(**self.auth_credential_dict)
+        test_redirected_url = 'http://www.foo.com/?' \
+            'code=AQSl-uTllUkqaslmahLg0jPb8CYsFnkQ6btgA1VXLw2rI4h3V5zJaoiNxpHASHftu-'\
+            'a_SibpH5Dg7VWQ7PZnklNjHv7yXtOjNWlkM1CrAUhRrjgBk_4' \
+            '&state=' +  test_auth_object.state
+        my_token = test_auth_object.get_lnkdn_access_token(test_redirected_url)
+        print test_redirected_url
+
+##    def test_getAccessToken123(self):
+##        test_auth_object = Oauth2_Py_Linkedin(self.path_to_write1,
+##                                              'my_website_details')
+##        token = test_auth_object.generate_access_token()
+##        test_redirected_url = 'http://www.kashyapmaduri.com/?'
+##                    'code=AQSl-uTllUkqaslmahLg0jPb8CYsFnkQ6btgA1VXLw2rI4h3V5zJaoiNxpHASHftu-'
+##                        'a_SibpH5Dg7VWQ7PZnklNjHv7yXtOjNWlkM1CrAUhRrjgBk_4'
+##                    '&state=f79eb2acfd7eecbee3904bddd9f0f3edf07cf5b5'
+##        my_token = test_auth_object.get_access_token(test_redirected_url)
+##        print my_token
+        
+        
         
 
-##    def tearDown(self):
-##        os.remove(self.path_to_write)
+    def tearDown(self):
+        os.remove(self.path_to_write)
         
         
     

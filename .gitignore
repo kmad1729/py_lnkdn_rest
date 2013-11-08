@@ -1,2 +1,4 @@
 *.json
+*.pyc
 my_site_key_details.ini
+starter_script.py
