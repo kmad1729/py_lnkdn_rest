@@ -36,12 +36,12 @@ class Oauth2_Py_Linkedin(OAuth2Service):
              > cat my_site_key_details.ini 
             [website1_details]
             client_id = api_key1
-            client_secret = api_key2
+            client_secret = secret_key1
             redirect_uri = http://www.website1.com
             
             [website2_details]
             client_id = api_key1
-            client_secret = api_key2
+            client_secret = secret_key2
             redirect_uri = http://www.website2.com
 
             To call just use lnkdn = Oauth2_Py_Linkedin(
