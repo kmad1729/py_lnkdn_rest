@@ -126,6 +126,7 @@ class Py_LinkedIn(object):
         '''
         self.token = oauth2_service_object.access_token
         self.req_format = req_format
+
         self.prefix_url = oauth2_service_object.base_url
 
     def get_all_contacts_for_user(self):
